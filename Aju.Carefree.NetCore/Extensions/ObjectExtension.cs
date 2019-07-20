@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Xml;
 using System.Xml.Linq;
+using Aju.Carefree.NetCore.Helpers;
 
 namespace Aju.Carefree.NetCore.Extensions
 {
@@ -1303,6 +1304,16 @@ namespace Aju.Carefree.NetCore.Extensions
         {
             if (source == null || target == null) return false;
             return target.Contains(source);
+        }
+
+        /// <summary>
+        /// 转换对象为JSON格式字符串
+        /// </summary>
+        /// <param name="obj">需要转换的对象</param>
+        /// <returns></returns>
+        public static string ToJson(this object obj)
+        {
+            return JsonConvertor.Serialize(obj);
         }
     }
 }
