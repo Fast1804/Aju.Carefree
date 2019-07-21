@@ -5,13 +5,13 @@ namespace Aju.Carefree.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ValuesController : ControllerBase
+    public class ValuesController : ApiControllerBase
     {
         // GET api/values
         [HttpGet]
-        public ActionResult<IEnumerable<string>> Get()
+        public ActionResult Get()
         {
-            return new string[] { "value1", "value2" };
+            return Json("test data");
         }
 
         // GET api/values/5
@@ -38,5 +38,6 @@ namespace Aju.Carefree.Api.Controllers
         public void Delete(int id)
         {
         }
+
     }
 }
