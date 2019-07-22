@@ -1,5 +1,9 @@
 ﻿using System;
 using System.IO;
+using System.Reflection;
+using Aju.Carefree.IServices;
+using Autofac;
+using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -19,7 +23,7 @@ namespace Aju.Carefree.Api
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
+        public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
@@ -57,6 +61,18 @@ namespace Aju.Carefree.Api
                     c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, "Aju.Carefree.Api.xml"));
                 });
             //services.AddMvcCore().AddApiExplorer();
+            
+            var builder = new ContainerBuilder();
+            builder.Populate(services);
+
+            var assemblys = Assembly.Load("Aju.Carefree.Services");
+            var baseType = typeof(IService<,>);
+
+            builder.RegisterAssemblyTypes(assemblys)
+                .Where(i => baseType.IsAssignableFrom(i) && i != baseType)
+                .AsImplementedInterfaces();
+            var container = builder.Build();
+            return new AutofacServiceProvider(container);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
